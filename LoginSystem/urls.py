@@ -1,3 +1,4 @@
+from django.urls import include, path
 """
 URL configuration for LoginSystem project.
 
@@ -19,4 +20,5 @@ from django.urls import path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("loginify/", include("Loginify.urls"))
 ]
