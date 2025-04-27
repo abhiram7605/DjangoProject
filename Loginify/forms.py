@@ -6,4 +6,10 @@ class UDform(forms.ModelForm):
         model = models.UserDetails
         fields= "__all__"
 
+class UDsigninform(forms.Form):
+    Email = forms.EmailField(max_length=50)
+    Password = forms.CharField(max_length=12)
+    
+
+
 
