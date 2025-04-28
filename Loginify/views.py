@@ -53,6 +53,84 @@ def signin(request):
         form= UDsigninform()
     
     return render(request, "Loginify/userdata.html", {"form": form})
+
+
+@csrf_exempt
+def all_data(request):
+    if request.method =="GET":
+        try:
+            userdata= UserDetails.objects.all()
+            sd = UDserializer(userdata, many= True)
+            return  JsonResponse({
+                "success": True,
+                "data": sd.data
+            }, status =200)
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "message": str(e)
+            },status=500)
+        
+@csrf_exempt
+def single_user(request, pk):
+    if request.method =="GET":
+        data = UserDetails.objects.get(pk=pk)
+        sd = UDserializer(data)
+        return JsonResponse({
+            "success": True,
+            "data":sd.data
+        }, status=200)
+    
+    if request.method =="POST":
+        try:
+            input_data = json.loads(request.body)
+            user = UserDetails.objects.get(pk=pk)
+            sd = UDserializer(user, data=input_data)
+            if sd.is_valid():
+                sd.save()
+                return JsonResponse({
+                    "success":True,
+                    "message":"Successfully updated"
+
+                }, status= 201)
+        except Exception as e:
+            return JsonResponse({
+                "Success":False,
+                "message": str(e)
+            }, status = 500)
+    
+    if request.method =="PATCH":
+        try:
+            input_data = json.loads(request.body)
+            user = UserDetails.objects.get(pk= pk)
+            sd = UDserializer(user, data= input_data, partial = True)
+            if sd.is_valid():
+                sd.save()
+                return JsonResponse({
+                    "success": True,
+                    "data": sd.data
+                }, status = 201)
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "message": str(e)
+            }, status = 500)
+    
+    if request.method == "DELETE":
+        try:
+            user = UserDetails.objects.get(pk=pk)
+            user.delete()
+            return JsonResponse({
+                "success": True,
+                "message": "Deleted Successfully"
+            }, status = 201)
+        except Exception as e:
+            return JsonResponse({
+                "success": False,
+                "message": str(e)
+            }, status= 500)
+    
+
         
 
 
