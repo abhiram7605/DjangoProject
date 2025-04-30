@@ -4,14 +4,14 @@ from django.http import HttpResponse, JsonResponse
 from . models import UserDetails
 from . serializers import UDserializer
 from. forms import UDform, UDsigninform
-from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 
 def hello(request):
     return HttpResponse("Hello world")
 
 
-@csrf_exempt
+
 
 def signup(request):
 
@@ -30,7 +30,7 @@ def signup(request):
         form = UDform()
     
     return render(request, "Loginify/userdata.html", {"form": form})
-@csrf_exempt
+
 def signin(request):
     if request.method == "POST":
         form = UDsigninform(request.POST)
@@ -55,7 +55,7 @@ def signin(request):
     return render(request, "Loginify/userdata.html", {"form": form})
 
 
-@csrf_exempt
+
 def all_data(request):
     if request.method =="GET":
         try:
@@ -70,8 +70,7 @@ def all_data(request):
                 "success": False,
                 "message": str(e)
             },status=500)
-        
-@csrf_exempt
+
 def single_user(request, pk):
     if request.method =="GET":
         data = UserDetails.objects.get(pk=pk)
